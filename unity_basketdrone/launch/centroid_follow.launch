@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="drone_altitude" default="7"/>
+  <arg name="centroid_method" default="1"/>
+  <arg name="box_version" default="1"/>
+
+  <node name="centroid_calculator" pkg="unity_basketdrone" type="centroid_calculator.py" output="screen" respawn="true">
+    <param name="drone_altitude" value="$(arg drone_altitude)"/>
+    <param name="centroid_method" value="$(arg centroid_method)"/>
+  </node> 
+  
+  <node name="drone_controller_new" pkg="unity_basketdrone" type="drone_controller_new.py" output="screen" respawn="true">
+    <param name="drone_altitude" value="$(arg drone_altitude)"/>
+    <param name="box_version" value="$(arg box_version)"/>
+  </node>
+
+</launch>

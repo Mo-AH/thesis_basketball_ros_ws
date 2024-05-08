@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="model" default="$(find unity_basketdrone)/urdf/quadrotor.urdf" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+  
+  <!--simulation time from clock topic coming from unity-->
+  <!-- <param name="/use_sim_time" value="true"/> -->
+
+  <!-- UNITY-ROS CONNECTION  130.251.13.139 192.168.43.28-->
+  <arg name="ROS_IP" default="192.168.117.246" doc="Will Set the IP for the ROS-TCP-Endpoint" />
+  <rosparam param="ROS_IP" subst_value="True">$(arg ROS_IP)</rosparam>
+  <!-- tcp ros endpoint -->
+  <node name="server_endpoint" pkg="ros_tcp_endpoint" type="default_server_endpoint.py" args="--wait" output="screen" respawn="true" />
+  
+  <!-- IMAGES FROM UNITY CAMERA -->
+  <!-- Subscribes to the compressed image topic, decompress it, and publishes the image-->  
+  <node name="unity_camera" pkg="unity_basketdrone" type="unity_camera" output="screen" respawn="true" /> 
+
+  <!-- RVIZ -->
+  <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find unity_basketdrone)/config/sim.rviz"/>
+  <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find urdf_tutorial)/urdf.rviz" /> -->
+
+  <!-- CAMERA FRAMES -->
+  <node pkg="tf" type="static_transform_publisher" name="unity_camera_frame" args="0 0 0 0 0 0  /world /unity_camera/frame  100"/>
+  <node pkg="tf" type="static_transform_publisher" name="unity_camera_rgb_frame" args="0 0 0 0 0 0  /unity_camera/frame /unity_camera/rgb_frame  100"/>
+
+  <!-- DRONE CONTROLLER
+  <node name="drone_controller" pkg="unity_basketdrone" type="drone_controller.py" output="screen" respawn="true" /> 
+
+  <node name="teleop_twist_keyboard" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output = "screen" launch-prefix = "xterm -e" respawn="true" />
+  DEBUG -->
+
+</launch>

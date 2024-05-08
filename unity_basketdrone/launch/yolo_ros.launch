@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- YOLOv8 Launcher -->
+  <include file="$(find ultralytics_ros)/launch/tracker.launch">
+    <arg name="image_topic" value="/unity_camera/rgb/image_raw"/>
+    <arg name="yolo_model" value="yolov8n_custom4.pt"/>
+    <arg name="debug" value="true"/>
+  </include>
+
+</launch>
